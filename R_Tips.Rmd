@@ -1,0 +1,408 @@
+---
+title: "R Tips & Tricks"
+author: "Julia Ponomarenko, CRG Bioinformatics core facility."
+date: "Dec 27, 2017"
+output:
+  html_document:
+    toc: true
+    toc_depth: 4
+    theme: readable
+---
+
+Nice R tutorial
+http://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1000482.s001&type=supplementary
+Also swirl tutorials https://github.com/swirldev/swirl_courses. Basic one was used here.
+
+The example dataset used in this tutorial (Davis from the package car)
+------------------
+```{r}
+install.packages("car")
+library(car)
+data <- Davis
+```
+
+
+
+Running R scripts in command line
+-----------------
+* At the command line, type “R CMD BATCH trig.R”. R will start up,
+process your commands and then quit.
+* Output is stored in the file trig.Rout
+* If there were no errors, the last line of the output file shows the time taken to run the script.
+* to run a script, use source(’ trig .R’, echo=T) to see commands and output
+
+
+Files and Directories
+--------------------------
+```{r}
+getwd() # current directory - This is directory where this file is located
+# to set up this directory as a working in console
+dir <- getwd()
+setwd(dir) # run it in console, not from inside the notebook
+
+file.info("R_Tips.Rmd")
+file.info("R_Tips.Rmd")$ctime 
+list.files()
+
+dir.create("testdir", showWarnings = F)
+setwd("testdir") # run in console
+file.create("mytest.R")
+file.exists("mytest.R")
+file.rename("mytest.R","mytest2.R")
+file.copy("mytest2.R","mytest3.R")
+list.files()
+
+# get full paths of all files and directories containing "R" or "r" in the directory dir
+filenames <- list.files(dir, pattern = "*R*", full.names = TRUE, recursive = TRUE, ignore.case = TRUE, include.dirs = TRUE) 
+Dir_separator <- "/" # for Windows it is "\"
+file_name <- as.character(lapply(strsplit(filenames[1], Dir_separator), tail, n = 1)) # to get just the file name, for example
+# while full.names = FALSE in list.files()does the same without the need to parse filenames
+
+list.dirs() # also useful command when looping via directories is needed
+
+
+dir.create(file.path('testdir2', 'testdir3'), recursive = TRUE)
+setwd("..") # one directory up
+unlink("testdir", recursive = T)  #removes testdir and all folders inside
+```
+
+
+Read files
+-----------
+```{r}
+file <- "R_Tips.Rmd"
+x <- read.table(file, skip = 7, nrows = 1) # for example, we read only line 8
+x <- as.numeric(x[2]) # for example, we need a value of the 2nd element of the vector x
+
+# let's write data to the file with the description lines on top
+file <- "Davis"
+conn <- file(file, open = "w")
+writeLines("This is the dataset Davis from the package car", conn)
+write("This is my favorite dataset", conn, append = TRUE)
+close(conn)
+
+conn <- file(file, open = "a")
+write.table(data, conn, row.names = FALSE) # can be write.csv()
+close(conn)
+
+#to read a data frame 
+conn <- file(file, open = "r")
+df <- read.table(conn, skip = 2, header = TRUE) # can be read.csv()
+close(conn)
+
+
+```
+
+
+Sequences, Numbers, Vectors, Matrices, Lists  
+-----------
+```{r}
+w <<- 10 # assign w to a global environment ???
+
+6.03 / 2
+6.03 %/% 2 # integer division
+6.03 %% 2 # getting remainder
+
+my_seq <- seq(5,10,length=30)
+my_seq
+
+# all three below are identical
+1:length(my_seq)
+seq(along.with = my_seq)
+seq_along(my_seq)
+
+# notice difference!
+rep(c(1,2,3), times = 10)
+rep(c(1,2,3), each = 10)
+
+x <- c(1,2,3,4,5,6)
+y <- x > 3 # boolean vector
+
+chars <- c("my", "name", "is")
+x <- paste(chars, collapse = " ") # concatenate vector
+paste("my", "name", "is", sep = " ") # same as above, but not paste(chars, sep = " ")
+
+# Careful: paste with vectors recycles the shorter vector
+paste(LETTERS, 1:4, sep = "-") # output is a vector!
+
+# random sampling from vectors without replacement
+y <- rnorm(1000)
+z <- rep(NA, 1000)
+my_data <- sample(c(y, z), 100)
+my_na <- is.na(my_data)
+sum(my_na) # how many NAs
+x <- my_data
+y <- x[!is.na(x)]
+y[y > 0]
+x[!is.na(x) & x > 0] # same as above
+x[x > 0] # gives NA for NA because NA > 0 = NA
+
+# NaN stand for "not a number"
+# Inf stand for infinity
+
+my_vector <- 1:20
+dim(my_vector) <- c(4, 5) # dim allows both to get and set the 'dim' attribute to make a vector to a matrix
+attributes(my_vector)
+class(my_vector)
+my_matrix <- my_vector
+
+my_matrix2 <- matrix(data = 1:20, nrow = 4)
+identical(my_matrix, my_matrix2)
+
+# naming matrix rows and columns
+patients <- c("Bill", "Gina", "Kelly", "Sean") # are in rows
+cbind(patients,my_matrix) # numbers in my_matrix are implicitly coerced in characters!
+my_data <- data.frame(patients, my_matrix) # so, use a data.frame instead
+cnames <- c("patient", "age", "weight", "bp", "rating", "test")
+colnames(my_data) <- cnames
+
+# which() function finds the indices:
+ints <- sample(10)
+which(ints > 7)
+any(ints < 0)
+all(ints > 0)
+```
+
+#### Lists
+```{r}
+l <- list(id = "Joe", age = 25, dob = c(1980, 3, 29))
+l$id
+l[[1]]
+l["id"] <- "Jim" #change element
+l["age"] <- NULL # drop element
+```
+
+#### Operators &, &&, | and ||
+```{r}
+#the `&` operator to evaluate AND across a vector:
+TRUE & c(TRUE, FALSE, FALSE)
+#The `&&` version of AND only evaluates the first member of a vector:
+TRUE && c(TRUE, FALSE, FALSE)
+
+#The OR operator follows a similar set of rules. The `|` version of OR evaluates OR across an entire vector, while the `||` version of OR only evaluates the first member of a vector.
+TRUE | c(TRUE, FALSE, FALSE)
+
+#All AND operators are evaluated before OR operators
+
+isTRUE(6 > 4)
+xor(5 == 6, !FALSE)
+
+```
+
+Functions
+-----------
+Type the function name to see its source code.
+Use args(function_name) to see the function arguments
+
+#### Function can be passed as an argument to other functions
+```{r}
+evaluate <- function(func, dat){
+  return(func(dat))
+}
+evaluate(sd, c(1.4, 3.6, 7.9, 8.8))
+evaluate(function(x){x+1}, 6)
+evaluate(function(x){x[1]}, c(8, 4, 0))
+evaluate(function(x){x[length(x)]}, c(8, 4, 0)) # accessing the last element
+```
+
+#### Ellipses
+Use ellipsis when the function calls the variable number of arguments, see https://www.r-bloggers.com/r-three-dots-ellipsis/
+
+The ellipses can be used to pass on arguments to other functions that are
+used within the function you're writing. Usually a function that has the
+ellipses as an argument has the ellipses as the last argument. The usage of
+such a function would look like:
+ellipses_func(arg1, arg2 = TRUE, ...)
+Interestingly the usage for the paste function is as follows:
+paste (..., sep = " ", collapse = NULL)
+Notice that the ellipses is the first argument, and all other arguments after the ellipses have default values. This is a strict rule in R programming: all arguments after an ellipses must have default values. 
+```{r}
+telegram <- function(...){
+  args <- list(...)
+  txt <- paste(args, collapse = " ")
+  paste("START", txt, "STOP", collapse = " ")
+}
+telegram("I", "want", "to eat")
+
+
+telegram2 <- function(...){
+  args <- list(...)
+  #extract named arguments from the args list by the name of the argument and double brackets: 
+  who <- args[["who"]]
+  verb <- args[["verb"]]
+  what <- args[["what"]]
+  paste("The person", who, "decided that she", verb, "to do the following", what)
+}
+telegram2(who = "I", verb = "want", what = "to eat")
+
+```
+
+
+Vectorization - Looping through an entire vector
+--------------------------
+```{r}
+x <- runif(100) # a vector of uniformly distributed 100 values
+y <- ifelse(x > 0.5, 1, 0) 
+```
+
+Q: Flip a biased coin [p=0.6 of heads] 100 times; how many heads do you get? Repeat this for 1000 trials.
+```{r}
+x <- replicate(1000, rbinom(n = 100, size = 1, p = 0.6))
+heads <- colSums(x)
+hist(heads)
+
+# or the same
+hist(rbinom(n = 1000, size = 100, p = 0.6))
+```
+
+
+Q. Fibonacci sequence (0, 1, 1, 2, 3, 5, 8, 13, 21,...). 
+Wite a function that returns n-th element in the sequence
+```{r}
+fibo <- function(n){
+  x1 <- 0
+  x2 <- 1
+  if (n == 1) return(x1)
+  if (n == 2) return(x2)
+  for (i in 3:n) {
+    x3 <- x1 + x2
+    x1 <- x2
+    x2 <- x3
+    }
+  return(x3)
+}
+system.time(o1 <- fibo(10000))
+
+# more R-style solution using a recursive function 
+fi <- function(n){
+  if (n == 1) return(0)
+  if (n == 2) return(1)
+  fi(n-1) + fi(n-2)
+}
+
+# how the latter function is terribly slow - compare execution time!!
+system.time(o1 <- fibo(30))
+system.time(o2 <- fi(30))
+```
+
+
+#### lapply() and sapply() are for lists and vectors
+These powerful functions, along with their close relatives (vapply() and tapply(), among others) offer a concise and convenient means of implementing the Split-Apply-Combine strategy for data analysis.
+
+The lapply() function (l stands for list) takes a list as input, applies a function to each element of the list, then returns a list of the same length as the original one. Since a data frame is just a list of vectors (you can see this with as.list(data)), we can use lapply() to apply the class() function to each column of the dataset. 
+```{r}
+cls_list <- lapply(data, class)
+cls_vect <- as.character(cls_list) # chacter vector
+
+cls_vect <- sapply(data, class) # sapply (s stands for simplifying the output) allows to get the above in one command
+
+#calculate mean for each column with numbers
+lapply(data[,2:5], mean, na.rm = TRUE) # NA needs to be omitted
+sapply(data[,2:5], mean, na.rm = TRUE) # to get a vector
+sapply(data[,2:5], mean, na.rm = TRUE, simplify = F) # to get a list as in lapply
+
+#However if lapply returns list of vectors, e.g.
+lapply(data[,2:5], range, na.rm = TRUE)
+# then sapply returns the matrix
+sapply(data[,2:5], range, na.rm = TRUE)
+
+# what if lapply returns vectors of different length?
+unique_vals <- lapply(data, unique, na.rm = TRUE)
+sapply(unique_vals, length)
+# then sapply returns the list, same as lapply
+sapply(data, unique, na.rm = TRUE)
+
+# using lapply() with an anonymous function, e.g. to get the first unique elements
+lapply(unique_vals, function(x) x[1])
+
+```
+
+#### vapply() returns a vector explicitly, while sapply() tries to guess the output format
+```{r}
+vapply(data, class, character(1)) # this might be a safe option to use in a running script rather than playing with data interactively
+```
+
+#### tapply() splits data up into groups based on the value of some variable, then applies a function to the members of each group.
+```{r}
+tapply(data$weight, data$sex, summary) # summary of weights by sex
+```
+
+
+#### apply() is for matrices and data frames
+```{r}
+apply(data[,2:5], 2, mean, na.rm = TRUE) # returns a vector of means by columns
+apply(data[,2:5], 1, mean, na.rm = TRUE) # returns a vector of means by rows
+df <- data[apply(data[,2:5], 1, sum, na.rm = TRUE) > 500,] # select rows with sum above 500
+
+apply(data, 2, function(x) length(unique(na.omit(x)))) # count unique values in each column, omitting NA
+
+apply(data[,2:5], 1, function(x) length(x[x < 80])) # how many values below 80 each row has 
+apply(data, 2, function(x) class(x))
+```
+
+Exploring data
+-------------------------
+```{r}
+object.size(data) # size of a dataset
+
+summary(data)
+str(data)
+table(data$sex)
+
+```
+
+
+Sampling
+------------------
+```{r}
+sample(1:6, 4, replace = TRUE) # simulate rolling four six-sided dice
+sample(LETTERS, 5) # w/o replacement
+
+flips <- sample(c(0, 1), 100, replace = TRUE, prob = c(0.3, 0.7)) #flipping unfair coin 100 times
+sum(flips)
+flips2 <- rbinom(n = 100, size = 1, prob = 0.7) # same as above
+sum(flips2)
+
+rnorm(10, mean = 100, sd = 25)
+
+my_pois <- replicate(100, rpois(5, 10)) # outputs a matrix, each column of which contains 5 random numbers generated from a Poisson distribution with lambda (or mean) of 10
+cm <- colMeans(my_pois)
+hist(cm) # Central limit theoreme at work!
+```
+
+
+Debugging in R
+-------------------
+* traceback()
+* Use browser() to single-step through your code. Place it within your function at the point you want to examine (e.g.) local variables.
+* Use debug(function.name) to step through entire function. undebug() will remove that debug call.
+* recover() is like browser, except you can choose which level to inspect, rather than the level at which browser was called.
+* Add warnings and errors to your code using warning(), stop().
+* Can add “assertions” into your code to check that certain values hold; e.g.,
+stopifnot (x>0)
+* debug(fn), undebug(fn)
+
+Bioconductor
+--------------------
+
+Access to databases
+--------------------
+
+Paralllelization
+--------------------
+
+Using GitHub from R studio
+----------------------------
+http://happygitwithr.com/new-github-first.html provides instruction how to setup R studio to use with git and Github.
+#### Follow this “GitHub first, then RStudio” sequence for each new project:
+## In github browser, create a new repo with README
+## In R Studio, start a new RStudio Project, via File > New Project > Version Control > Git, opening a new session and creating a new folder on your computer.
+## Using Git tab on the right panel, do commit of all valuable changes in local git repository.
+## Push local changes to GitHub, but first pull the current version from GitHub, pushing the blue button "Pull"
+
+
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
