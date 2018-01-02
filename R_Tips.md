@@ -14,13 +14,6 @@ The example dataset used in this tutorial (Davis from the package car)
 ```r
 #install.packages("car")
 library(car)
-```
-
-```
-## Warning: package 'car' was built under R version 3.2.5
-```
-
-```r
 data <- Davis
 ```
 
@@ -52,9 +45,9 @@ file.info("R_Tips.Rmd")
 
 ```
 ##             size isdir mode               mtime               ctime
-## R_Tips.Rmd 15448 FALSE  644 2018-01-02 13:27:56 2018-01-02 13:27:56
+## R_Tips.Rmd 18050 FALSE  644 2018-01-02 14:47:50 2018-01-02 14:47:50
 ##                          atime uid gid uname grname
-## R_Tips.Rmd 2018-01-02 13:27:58 501  20  jpon  staff
+## R_Tips.Rmd 2018-01-02 14:47:51 501  20  jpon  staff
 ```
 
 ```r
@@ -62,7 +55,7 @@ file.info("R_Tips.Rmd")$ctime
 ```
 
 ```
-## [1] "2018-01-02 13:27:56 GMT"
+## [1] "2018-01-02 14:47:50 GMT"
 ```
 
 ```r
@@ -70,8 +63,8 @@ list.files()
 ```
 
 ```
-## [1] "Davis"        "R_Tips_files" "R_Tips.html"  "R_Tips.md"   
-## [5] "R_Tips.Rmd"   "R_Tips.Rproj" "README.md"
+## [1] "Davis"        "Figures"      "R_Tips_files" "R_Tips.html" 
+## [5] "R_Tips.md"    "R_Tips.Rmd"   "R_Tips.Rproj" "README.md"
 ```
 
 ```r
@@ -296,10 +289,11 @@ y[y > 0]
 ```
 
 ```
-##  [1] 0.25474043 1.34975483 0.57592608 0.45241089 0.53178729 0.09634152
-##  [7] 1.10024299 0.28585159 0.78111450 0.29317030 0.07206466 0.53874973
-## [13] 0.11578976 0.09242511 0.75162908 0.42986137 0.31608854 0.26020473
-## [19] 1.65685828 0.46416488 0.26469166
+##  [1] 0.54399780 0.29844471 0.16166920 0.54393772 0.92362187 0.76989513
+##  [7] 1.74918185 1.24186773 1.77120167 0.32720393 1.02815249 0.20482041
+## [13] 1.47819291 1.10687209 0.75079862 0.96390522 2.28152215 0.03696307
+## [19] 0.22763205 1.88153435 0.22512108 1.10843293 1.32586840 1.17389049
+## [25] 0.08589314 0.48220699 2.65043731
 ```
 
 ```r
@@ -307,10 +301,11 @@ x[!is.na(x) & x > 0] # same as above
 ```
 
 ```
-##  [1] 0.25474043 1.34975483 0.57592608 0.45241089 0.53178729 0.09634152
-##  [7] 1.10024299 0.28585159 0.78111450 0.29317030 0.07206466 0.53874973
-## [13] 0.11578976 0.09242511 0.75162908 0.42986137 0.31608854 0.26020473
-## [19] 1.65685828 0.46416488 0.26469166
+##  [1] 0.54399780 0.29844471 0.16166920 0.54393772 0.92362187 0.76989513
+##  [7] 1.74918185 1.24186773 1.77120167 0.32720393 1.02815249 0.20482041
+## [13] 1.47819291 1.10687209 0.75079862 0.96390522 2.28152215 0.03696307
+## [19] 0.22763205 1.88153435 0.22512108 1.10843293 1.32586840 1.17389049
+## [25] 0.08589314 0.48220699 2.65043731
 ```
 
 ```r
@@ -318,19 +313,20 @@ x[x > 0] # gives NA for NA because NA > 0 = NA
 ```
 
 ```
-##  [1]         NA 0.25474043         NA         NA         NA         NA
-##  [7]         NA         NA         NA         NA         NA 1.34975483
-## [13]         NA         NA         NA         NA         NA         NA
-## [19]         NA         NA 0.57592608 0.45241089         NA         NA
-## [25]         NA         NA 0.53178729 0.09634152         NA         NA
-## [31] 1.10024299         NA         NA         NA         NA 0.28585159
-## [37]         NA 0.78111450         NA         NA 0.29317030         NA
-## [43] 0.07206466 0.53874973         NA         NA         NA         NA
-## [49]         NA 0.11578976         NA 0.09242511         NA 0.75162908
-## [55]         NA         NA         NA 0.42986137 0.31608854         NA
-## [61]         NA         NA         NA         NA         NA         NA
-## [67] 0.26020473         NA 1.65685828         NA 0.46416488         NA
-## [73]         NA 0.26469166
+##  [1]         NA         NA         NA         NA 0.54399780         NA
+##  [7]         NA 0.29844471 0.16166920         NA         NA         NA
+## [13]         NA 0.54393772         NA 0.92362187 0.76989513         NA
+## [19]         NA 1.74918185         NA         NA         NA 1.24186773
+## [25] 1.77120167         NA 0.32720393 1.02815249         NA         NA
+## [31] 0.20482041         NA 1.47819291 1.10687209         NA         NA
+## [37]         NA         NA 0.75079862         NA         NA         NA
+## [43]         NA         NA         NA         NA 0.96390522         NA
+## [49] 2.28152215         NA 0.03696307         NA         NA 0.22763205
+## [55]         NA         NA         NA         NA         NA         NA
+## [61] 1.88153435         NA 0.22512108         NA         NA 1.10843293
+## [67] 1.32586840 1.17389049         NA         NA 0.08589314         NA
+## [73] 0.48220699         NA         NA         NA         NA         NA
+## [79] 2.65043731         NA
 ```
 
 ```r
@@ -391,7 +387,7 @@ which(ints > 7)
 ```
 
 ```
-## [1] 2 5 7
+## [1] 3 5 7
 ```
 
 ```r
@@ -624,7 +620,7 @@ system.time(o1 <- fibo(10000))
 
 ```
 ##    user  system elapsed 
-##   0.004   0.000   0.004
+##   0.005   0.000   0.004
 ```
 
 ```r
@@ -641,7 +637,7 @@ system.time(o1 <- fibo(30))
 
 ```
 ##    user  system elapsed 
-##       0       0       0
+##   0.000   0.000   0.001
 ```
 
 ```r
@@ -650,7 +646,7 @@ system.time(o2 <- fi(30))
 
 ```
 ##    user  system elapsed 
-##   1.255   0.012   1.277
+##   1.304   0.016   1.331
 ```
 
 <br/>
@@ -916,7 +912,7 @@ sample(1:6, 4, replace = TRUE) # simulate rolling four six-sided dice
 ```
 
 ```
-## [1] 3 6 3 4
+## [1] 4 5 3 5
 ```
 
 ```r
@@ -924,7 +920,7 @@ sample(LETTERS, 5) # w/o replacement
 ```
 
 ```
-## [1] "I" "B" "U" "V" "W"
+## [1] "Q" "B" "V" "C" "F"
 ```
 
 ```r
@@ -933,7 +929,7 @@ sum(flips)
 ```
 
 ```
-## [1] 70
+## [1] 82
 ```
 
 ```r
@@ -942,7 +938,7 @@ sum(flips2)
 ```
 
 ```
-## [1] 72
+## [1] 75
 ```
 
 ```r
@@ -950,8 +946,8 @@ rnorm(10, mean = 100, sd = 25)
 ```
 
 ```
-##  [1]  84.59988 112.09626 140.87775 127.65466  69.41996  68.98042  94.25601
-##  [8] 103.13273  92.40571  95.16910
+##  [1] 105.40993 110.79797 109.17074  97.56526 144.73061  77.31087 104.95054
+##  [8] 101.31248  62.96104 111.04215
 ```
 
 ```r
@@ -1014,6 +1010,29 @@ Add in output at the top of Rmd file "keep_md: true"
 
 By making foo.Rmd available, others can see and run your actual code. By sharing foo.md and/or foo.html, others can casually browse your end product and decide if they even want to bother.
 
+* Add figures on GitHub md-document, using for example, ```{r, CLT_50_samples, fig.path='Figures/'} and commiting the folder Figures as well (that is the whole folder with the project)
+
+```r
+n_sample <- 50
+lambda <- 8
+size <- 5
+my_pois <- replicate(n_sample, rpois(size, lambda)) # outputs a matrix, each column of which contains 5 random numbers generated from a Poisson distribution with lambda (or mean) of 10
+cm <- colMeans(my_pois)
+title <- paste("Central limit theorem at work: \nDistribution of means of ",  n_sample, " samples of size ", size, "\n from the Poisson distribution with lambda = ", lambda)
+hist(cm, col = "gainsboro", ylim = c(0, 0.5), xlim = c(2,14), main = title, freq = F, breaks = 20)
+lines(density(cm), lwd = 2)
+curve(dnorm(x, mean = mean(cm), sd = sd(cm)), col = "red", lwd = 2, add = T)
+```
+
+![](Figures/CLT_50_samples-1.png)<!-- -->
+
+<br/>
+
+![](Figures/CLT_100_samples-1.png)<!-- -->
+
+![](Figures/CLT_1000_samples-1.png)<!-- -->
+
+![](Figures/CLT_10000_samples-1.png)<!-- -->
 
 <br/>
 

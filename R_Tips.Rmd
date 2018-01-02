@@ -18,7 +18,7 @@ http://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.10004
 
 The example dataset used in this tutorial (Davis from the package car)
 ------------------
-```{r}
+```{r, warning=FALSE, message=FALSE}
 #install.packages("car")
 library(car)
 data <- Davis
@@ -441,6 +441,60 @@ Add in output at the top of Rmd file "keep_md: true"
 
 By making foo.Rmd available, others can see and run your actual code. By sharing foo.md and/or foo.html, others can casually browse your end product and decide if they even want to bother.
 
+* Add figures on GitHub md-document, using for example, ```{r, CLT_50_samples, fig.path='Figures/'} and commiting the folder Figures as well (that is the whole folder with the project)
+```{r, CLT_50_samples, fig.path='Figures/'}
+n_sample <- 50
+lambda <- 8
+size <- 5
+my_pois <- replicate(n_sample, rpois(size, lambda)) # outputs a matrix, each column of which contains 5 random numbers generated from a Poisson distribution with lambda (or mean) of 10
+cm <- colMeans(my_pois)
+title <- paste("Central limit theorem at work: \nDistribution of means of ",  n_sample, " samples of size ", size, "\n from the Poisson distribution with lambda = ", lambda)
+hist(cm, col = "gainsboro", ylim = c(0, 0.5), xlim = c(2,14), main = title, freq = F, breaks = 20)
+lines(density(cm), lwd = 2)
+curve(dnorm(x, mean = mean(cm), sd = sd(cm)), col = "red", lwd = 2, add = T)
+
+```
+
+<br/>
+
+```{r, CLT_100_samples, fig.path='Figures/', echo = FALSE}
+n_sample <- 100
+lambda <- 8
+size <- 5
+my_pois <- replicate(n_sample, rpois(size, lambda)) # outputs a matrix, each column of which contains 5 random numbers generated from a Poisson distribution with lambda (or mean) of 10
+cm <- colMeans(my_pois)
+title <- paste("Means of ",  n_sample, " samples")
+hist(cm, col = "gainsboro", ylim = c(0, 0.5), xlim = c(2,14), main = title, freq = F, breaks = 20)
+lines(density(cm), lwd = 2)
+curve(dnorm(x, mean = mean(cm), sd = sd(cm)), col = "red", lwd = 2, add = T)
+
+```
+
+```{r, CLT_1000_samples, fig.path='Figures/', echo = FALSE}
+n_sample <- 1000
+lambda <- 8
+size <- 5
+my_pois <- replicate(n_sample, rpois(size, lambda)) # outputs a matrix, each column of which contains 5 random numbers generated from a Poisson distribution with lambda (or mean) of 10
+cm <- colMeans(my_pois)
+title <- paste("Means of ",  n_sample, " samples")
+hist(cm, col = "gainsboro", ylim = c(0, 0.5), xlim = c(2,14), main = title, freq = F, breaks = 20)
+lines(density(cm), lwd = 2)
+curve(dnorm(x, mean = mean(cm), sd = sd(cm)), col = "red", lwd = 2, add = T)
+
+```
+
+```{r, CLT_10000_samples, fig.path='Figures/', echo = FALSE}
+n_sample <- 10000
+lambda <- 8
+size <- 5
+my_pois <- replicate(n_sample, rpois(size, lambda)) # outputs a matrix, each column of which contains 5 random numbers generated from a Poisson distribution with lambda (or mean) of 10
+cm <- colMeans(my_pois)
+title <- paste("Means of ",  n_sample, " samples")
+hist(cm, col = "gainsboro", ylim = c(0, 0.5), xlim = c(4,12), main = title, freq = F, breaks = 20)
+lines(density(cm), lwd = 2)
+curve(dnorm(x, mean = mean(cm), sd = sd(cm)), col = "red", lwd = 2, add = T)
+
+```
 
 <br/>
 
