@@ -388,7 +388,7 @@ Bioconductor
 Access to databases
 --------------------
 
-Paralllelization
+Parallelization
 --------------------
 
 Using GitHub from R studio
