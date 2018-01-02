@@ -398,7 +398,7 @@ http://happygitwithr.com/new-github-first.html provides instruction how to setup
 ## In github browser, create a new repo with README
 ## In R Studio, start a new RStudio Project, via File > New Project > Version Control > Git, opening a new session and creating a new folder on your computer.
 ## Using Git tab on the right panel, do commit of all valuable changes in local git repository.
-## Push local changes to GitHub, but first pull the current version from GitHub, pushing the blue button "Pull"
+## Push local changes to GitHub, but first pull the current version from GitHub, pushing the blue button "Pull", and then the green button "Push"
 
 
 
