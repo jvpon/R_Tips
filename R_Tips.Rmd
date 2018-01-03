@@ -402,6 +402,7 @@ Debugging in R
 * Can add “assertions” into your code to check that certain values hold; e.g.,
 stopifnot (x>0)
 * debug(fn), undebug(fn)
+* To run a script with all commands and output, in Console of RStudio type source("test.R", echo=T)
 <br/>
 
 
@@ -409,10 +410,12 @@ stopifnot (x>0)
 Running R scripts in command line
 -----------------
 * At the command line, type “R CMD BATCH trig.R”. R will start up,
-process your commands and then quit.
-* Output is stored in the file trig.Rout
-* If there were no errors, the last line of the output file shows the time taken to run the script.
-* to run a script, use source(’ trig .R’, echo=T) to see commands and output
+process your commands and then quit. Output will be in the file trig.Rout. If there were no errors, the last line of the output file shows the time taken to run the script.
+* At the command line, "Rscript trig.R"" will print the output to the terminal
+* To run the script as "./trig.R" (for example from the bash script), add "#!/usr/bin/env Rscript" at the top of the file and make "chmod 755 trig.R"
+* Another way to run a script, "R < trig.R --no-save", or --save
+* Any R command can be run in the command line as 'Rscript -e "getwd()"' or 'Rscript -e "install.pacjages(c("pack1", "pack2"))' , or preceed with "sudo" if it is installed not in the default location
+* See Rscript --help for options. For example, --verbose can be used.
 
 <br/>
 
@@ -500,6 +503,10 @@ curve(dnorm(x, mean = mean(cm), sd = sd(cm)), col = "red", lwd = 2, add = T)
 
 Rmd files
 -----------------------
+http://www.stat.cmu.edu/~cshalizi/rmarkdown/
+http://rmarkdown.rstudio.com/html_document_format.html#overview
+<br/>
+
 * Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
 * In-line code is used like this: In this tutorial, we are using the dataset with `r nrow(data)` data point and `r ncol(data)` variables.
